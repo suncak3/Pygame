@@ -54,7 +54,7 @@ def loadSounds():
 
 
 def setTimer():
-    ghost_timer = pygame.USEREVENT + 1
+    ghost_timer = pygame.USEREVENT
     pygame.time.set_timer(ghost_timer, 2500)
     reload_timer = pygame.USEREVENT + 2
 

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import utils as u
+import random
 
 clock = pygame.time.Clock()
 
@@ -58,7 +59,6 @@ def main_menu(bg_img,bg_sound,screen):
     while menu:
 
         for event in pygame.event.get():
-            # restart game
             mouse = pygame.mouse.get_pos()
             if begin_label_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
                 bg_img = pygame.image.load('images/background.jpg')
@@ -142,7 +142,8 @@ def startGame(screen,bg_img,walk_left,walk_right,ghost_img,player_anim,bg_x,play
             if ghost_list_in_game:
                 for (i, el) in enumerate(ghost_list_in_game):
                     screen.blit(ghost_img, el)
-                    el.x -= 8
+
+                    el.x -= 8+(kill_count*0.50)
 
                     #remove ghosts
                     if el.x < 8:
@@ -258,7 +259,17 @@ def startGame(screen,bg_img,walk_left,walk_right,ghost_img,player_anim,bg_x,play
                 run = False
             if event.type == ghost_timer:
                 new_ghost_rect = ghost_img.get_rect(topleft=(602, 200))
-                ghost_list_in_game.append(new_ghost_rect)
+
+                ghost_level = 2
+                if(kill_count >= 14 and kill_count <=20):
+                    ghost_level = 3
+                elif(kill_count >=20 and kill_count <= 25):
+                    ghost_level = 4
+                elif(kill_count >=25):
+                    ghost_level = 5
+
+                for i in range(0,random.randint(1,ghost_level)):
+                    ghost_list_in_game.append(new_ghost_rect)
             #Setting reload
             if event.type == reload_timer:
                 reloading = False
@@ -266,11 +277,11 @@ def startGame(screen,bg_img,walk_left,walk_right,ghost_img,player_anim,bg_x,play
                 pygame.time.set_timer(reload_timer, 0)  # Отключаем таймер перезарядки
             #Сделать так, чтобы только при отпуска клавиши выпускалась пуля
             if gameplay and event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
-               if not reloading and shots_fired < 3:
+               if not reloading and shots_fired < 5:
                 new_bullet_rect = bullet_img.get_rect(topleft=(player_x + 15, player_y + 8))
                 bullets.append(new_bullet_rect)
                 shots_fired += 1
-                if shots_fired == 3:
+                if shots_fired == 5:
                     reloading = True
                     pygame.time.set_timer(reload_timer, 2500)  # Запускаем таймер перезарядки на 2 секунды
 
